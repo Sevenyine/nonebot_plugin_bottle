@@ -1,3 +1,4 @@
+import re
 import random
 import asyncio
 from typing import Union
@@ -122,14 +123,27 @@ cancel = set(["取消", "cancel"])
 
 @throw.handle()
 async def _(
+    bot: Bot,
     matcher: Matcher,
     event: GroupMessageEvent,
     args: Message = CommandArg(),
 ):
     await verify(matcher=matcher, event=event)
+
     if args:
         matcher.set_arg("content", args)
         matcher.set_arg("__has_content__", True)
+        print(args)
+
+    if "reply" in str(event):
+        print("event", str(event))
+        id = re.search(r'id=(-?\d+)', str(event)).group(1)
+        msg = await bot.get_msg(message_id = id)
+        args = str(msg['message'])
+        matcher.set_arg("content", args)
+        matcher.set_arg("__has_content__", True)
+        matcher.set_arg("__is_reply__", True)
+        print(args)
 
 
 @throw.got("content", prompt="在漂流瓶中要写下什么呢？（输入“取消”来取消扔漂流瓶操作。）")
@@ -140,11 +154,11 @@ async def _(
     args: Message = Arg("content"),
     session: AsyncSession = Depends(get_session),
 ):
-    message_text = args.extract_plain_text().strip()
+    ba.add("cooldown", event.user_id)
 
     message_id = event.message_id
 
-    ba.add("cooldown", event.user_id)
+    message_text = args.extract_plain_text().strip() if "__is_reply__" not in state else args
 
     if "__has_content__" not in state and message_text in cancel:
         await throw.finish(MessageSegment.reply(message_id) + "已取消扔漂流瓶操作。")
@@ -164,7 +178,9 @@ async def _(
             MessageSegment.reply(message_id)
             + "您漂流瓶中的字符换行比率超过了最大字符换行比率限制。\n字符换行比率，是您发送的漂流瓶总字符数量和换行的比值。为了防止刷屏，请您尝试减少漂流瓶的换行数量或增加有意义漂流瓶字符。"
         )
+
     audit = await text_audit(text=message_text)
+
     if not audit == "pass":
         if audit == "Error":
             await throw.finish(
