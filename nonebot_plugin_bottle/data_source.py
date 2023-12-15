@@ -21,7 +21,7 @@ from nonebot.adapters.onebot.v11 import Message, MessageSegment
 from nonebot_plugin_datastore.db import get_engine, post_db_init, create_session
 
 from .model import Like, Bottle, Report, Comment
-from .config import api_key, secret_key, local_storage
+from .config import api_key, secret_key, local_storage, max_report
 
 data_dir = Path("data/bottle")
 if local_storage:
@@ -93,6 +93,7 @@ def image_count(bottle: Bottle) -> int:
 
 
 def whether_collapse(bottle: Bottle, bottle_str) -> bool:
+    # 分别为触发折叠（合并转发）时的最大换行数量、最大图片数量、最大消息字符数量（不含）
     max_return = 7
     max_image = 2
     max_len = 200
@@ -255,12 +256,12 @@ class BottleManager:
                 await session.execute(text(f"TRUNCATE TABLE {table}"))
 
     async def report(
-        self, bottle: Bottle, user_id: int, session: AsyncSession, times_max: int = 5
+        self, bottle: Bottle, user_id: int, session: AsyncSession, times_max: int = max_report
     ) -> int:
         """
         举报漂流瓶
         `index`: 漂流瓶编号
-        `timesMax`: 到达此数值自动处理
+        `timesMax`: 到达此数值自动处理，可在配置文件中修改
 
         返回
         0 举报失败

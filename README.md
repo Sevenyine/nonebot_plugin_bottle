@@ -1,12 +1,12 @@
 # Nonebot 漂流瓶插件
 # **⚠️注意**
-> 2023年10月22日，本插件推送了2.0.0版本。建议在升级2.0.0版本前，先运行`nb datastore upgrade`命令（需要[nb_cli](https://github.com/nonebot/nb-cli))。
+> 2023年10月22日，本插件推送了2.0.0版本。建议在升级2.0.0版本前，先运行`nb datastore upgrade`命令（需要 [nb_cli](https://github.com/nonebot/nb-cli)）。
 > 
 ## 安装
 - 使用 `pip install nonebot_plugin_bottle`
 - 使用 `nb plugin install nonebot_plugin_bottle`
 ## 指令 (前应带指令前缀)
-- `扔漂流瓶` [文本/图片] 或 `扔漂流瓶` 后一条消息跟漂流瓶内容
+- `扔漂流瓶` [文本/图片] 或 `扔漂流瓶` 后一条消息跟漂流瓶内容 或 回复想要扔漂流瓶的消息，回复消息中输入 `扔漂流瓶`
 - `寄漂流瓶` [文本/图片] （同`扔漂流瓶`，防止指令冲突用）
 - `捡漂流瓶` 
 - `查看漂流瓶` [漂流瓶编号]
@@ -35,7 +35,7 @@
 - SUPERUSER:
     - `删除漂流瓶`可以删除指定漂流瓶
     - `清空漂流瓶`顾名思义，使用需谨慎
-    - `恢复漂流瓶`可以恢复被删除的漂流瓶
+    - `恢复漂流瓶`可以恢复被手动或自动删除的漂流瓶
     - `删除漂流瓶评论`可删除该发送者在该瓶的所有评论
     - `漂流瓶详情`将会发送漂流瓶发送者的QQ号和群号，所有回复人的QQ号
     - `漂流瓶黑名单`中`举报`选项是指`举报漂流瓶`的使用权限
@@ -90,6 +90,7 @@
 | API KEY | nonebot_plugin_bottle_api_key | str | "" |
 | SECRET KEY | nonebot_plugin_bottle_secret_key | str | "" |
 | 是否缓存图片 | nonebot_plugin_bottle_local_storage | bool | True |
+| 漂流瓶最大举报次数 | nonebot_plugin_bottle_max_report | int | 5 |
 | 漂流瓶最大字符数量 | nonebot_plugin_bottle_max_length | int | 0 |
 | 漂流瓶最大换行数量 | nonebot_plugin_bottle_max_return | int | 0 |
 | 漂流瓶字符换行比率 | nonebot_plugin_bottle_rt_rate | int | 0 |

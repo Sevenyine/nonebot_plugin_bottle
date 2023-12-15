@@ -68,17 +68,19 @@ SUPERUSER指令：
     },
 )
 
+# 用户命令
 throw = on_command(
     "扔漂流瓶", aliases=set(["寄漂流瓶", "丢漂流瓶"]), permission=GROUP, priority=100, block=True
 )
-get = on_command("捡漂流瓶", priority=100, block=True)
+get = on_command("捡漂流瓶", permission=GROUP, priority=100, block=True)
 report = on_command("举报漂流瓶", priority=100, block=True)
-comment = on_command("评论漂流瓶", priority=100, block=True)
+comment = on_command("评论漂流瓶", aliases=set(["回复漂流瓶"]), priority=100, block=True)
 check_bottle = on_command("查看漂流瓶", priority=100, block=True)
 remove = on_command("删除漂流瓶", priority=100, block=True)
 listb = on_command("我的漂流瓶", priority=100, block=True)
 like = on_command("点赞漂流瓶", priority=100, block=True)
 
+# 超管命令
 resume = on_command("恢复漂流瓶", permission=SUPERUSER, priority=100, block=True)
 clear = on_command("清空漂流瓶", permission=SUPERUSER, priority=100, block=True)
 comrem = on_command("删除漂流瓶评论", permission=SUPERUSER, priority=100, block=True)
@@ -135,7 +137,7 @@ async def _(
         matcher.set_arg("__has_content__", True)
 
 
-@throw.got("content", prompt="在漂流瓶中要写下什么呢？（输入“取消”来取消扔漂流瓶操作。）")
+@throw.got("content", prompt="在漂流瓶中要写下什么呢？（发送“取消”来取消扔漂流瓶操作。）")
 async def _(
     bot: Bot,
     state: T_State,
@@ -449,6 +451,7 @@ async def _(
         group_name = bottle.group_name
     comments = await bottle_manager.get_comment(bottle=bottle, session=session)
     message_id = event.message_id
+    # 判断是否满足捡漂流瓶的要求
     if not comments and event.user_id != bottle.user_id and str(event.user_id) not in bot.config.superusers:
         await check_bottle.finish(
             MessageSegment.reply(message_id)

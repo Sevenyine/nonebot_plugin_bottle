@@ -9,7 +9,9 @@ class Config(BaseModel, extra=Extra.ignore):
     nonebot_plugin_bottle_secret_key: str = ""
     # 是否将图片保存在本地
     nonebot_plugin_bottle_local_storage: bool = True
-    # 瓶子最大字符数量
+    # 自动删除所需的举报次数
+    nonebot_plugin_bottle_max_report: int = 5
+    # 最大字符数量
     nonebot_plugin_bottle_max_length: int = 0
     # 最大换行数量
     nonebot_plugin_bottle_max_return: int = 0
@@ -24,3 +26,4 @@ local_storage = config.nonebot_plugin_bottle_local_storage
 maxlen = config.nonebot_plugin_bottle_max_length
 maxrt = config.nonebot_plugin_bottle_max_return
 rtrate = config.nonebot_plugin_bottle_rt_rate
+max_report = config.nonebot_plugin_bottle_max_report
